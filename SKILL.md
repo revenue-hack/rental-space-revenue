@@ -9,6 +9,13 @@ Produce a traceable monthly report in which every recognized amount is tied to a
 
 Use the mailbox, file-reading, spreadsheet, and code-execution tools available in the current agent environment. Do not depend on product-specific tool names, so the same skill can run in Codex or Claude.
 
+## Required preflight and questions
+
+1. Before searching, verify that a mail search/read capability exists and that the intended mailbox is actually connected. In Codex, use a harmless profile or read-only mailbox check; do not treat the mere presence of a Gmail tool as proof of connection. In Claude, perform the equivalent connector or MCP check.
+2. If mail access is unavailable, unauthenticated, or points to an uncertain account, stop the email portion and tell the user exactly what must be connected or confirmed. Offer exported reservation emails as an alternative input. Never imply that email was checked when it was not.
+3. Before calculating, ask the user for any missing fact that can materially change the result and cannot be established from source evidence. Typical blockers include the target period or timezone, accounts/spaces in scope, ambiguous store matches, unresolved cancellations/refunds, unclear cumulative-versus-incremental extensions, and reservation-specific fee terms. Do not silently guess.
+4. Apply documented defaults only when the required classification is known, and disclose each estimate. If a reliable partial total can be produced while some items remain unresolved, separate confirmed and unresolved amounts and ask focused questions that identify the affected reservation IDs.
+
 ## Scope and period
 
 - Confirm the target month, timezone, and accounts/spaces in scope. If the user says “last month,” use the previous completed calendar month in the user’s timezone.
@@ -53,6 +60,8 @@ Read [platform-rules.md](references/platform-rules.md) when identifying platform
 
 Run `scripts/parse_kashikashi.py SOURCE --output normalized.json` for a Kashikashi settlement CSV or PDF. Review warnings and reconcile the parsed sales, booking fees, transfer fees, and scheduled payout to the source totals before combining them with email-derived bookings.
 
+If no Kashikashi statement was supplied, do not block the Instabase, SpaceMarket, or Yoyappin reconciliation. Clearly label the result as excluding Kashikashi and, during the work or in the final handoff, tell the user that they can upload the relevant Kashikashi CSV or PDF to add it. Never report an all-platform grand total as complete while Kashikashi is expected but missing.
+
 ## Deliverable and checks
 
 Create or update one workbook with:
@@ -62,7 +71,7 @@ Create or update one workbook with:
 - A notification/source audit trail.
 - Assumptions and unresolved items, including exact booking IDs.
 
-Reconcile detail to platform totals, store totals, and any statement payout. Check duplicate IDs, blank IDs, formula errors, period boundaries, and cancellations. Explicitly state remaining uncertainties.
+Reconcile detail to platform totals, store totals, and any statement payout. Check duplicate IDs, blank IDs, formula errors, period boundaries, and cancellations. Explicitly state remaining uncertainties and ask the user to resolve any item that materially affects the result before calling it final.
 
 ## Public distribution
 

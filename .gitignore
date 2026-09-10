@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.xlsx
+*.xls
+*.csv
+*.tsv
+*.pdf
+*.json
+*.env
+.env*
+output/
+outputs/
+tmp/
+downloads/

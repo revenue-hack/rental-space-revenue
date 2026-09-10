@@ -1,0 +1,14 @@
+interface:
+  display_name: レンタルスペース報酬集計
+  short_description: 利用日基準で媒体・スペース別の売上と手数料を予約ID照合
+  default_prompt: Use $rental-space-revenue to reconcile last month's usage-date revenue
+    by platform and space, searching one year of booking email.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

@@ -1,6 +1,6 @@
 ---
 name: rental-space-revenue
-description: Aggregate monthly rental-space revenue on a usage-date basis from up to one year of connected email and uploaded CSV/PDF statements. Use for platform/space totals, reservation-ID reconciliation, changes, extensions, cancellations, duplicate notifications, fees, and net proceeds across services such as Instabase, SpaceMarket, Yoyappin, and Kashikashi.
+description: Aggregate monthly rental-space revenue on a usage-date basis from connected email/calendar data and uploaded CSV/PDF statements. Use for platform/space totals, reservation-ID reconciliation, changes, extensions, cancellations, duplicate notifications, fees, and net proceeds across services such as Instabase, SpaceMarket, Yoyappin, and Kashikashi.
 ---
 
 # Rental-space revenue reconciliation
@@ -13,12 +13,13 @@ Use the mailbox, file-reading, spreadsheet, and code-execution tools available i
 
 1. Before searching, verify that a mail search/read capability exists and that the intended mailbox is actually connected. In Codex, use a harmless profile or read-only mailbox check; do not treat the mere presence of a Gmail tool as proof of connection. In Claude, perform the equivalent connector or MCP check.
 2. If mail access is unavailable, unauthenticated, or points to an uncertain account, stop the email portion and tell the user exactly what must be connected or confirmed. Offer exported reservation emails as an alternative input. Never imply that email was checked when it was not.
-3. Before calculating, ask the user for any missing fact that can materially change the result and cannot be established from source evidence. Typical blockers include the target period or timezone, accounts/spaces in scope, ambiguous store matches, unresolved cancellations/refunds, unclear cumulative-versus-incremental extensions, and reservation-specific fee terms. Do not silently guess.
-4. Apply documented defaults only when the required classification is known, and disclose each estimate. If a reliable partial total can be produced while some items remain unresolved, separate confirmed and unresolved amounts and ask focused questions that identify the affected reservation IDs.
+3. A target year and month is mandatory. If the user has not specified it, ask “What year and month of usage revenue should I aggregate?” before searching any source. Do not choose the current or previous month automatically. Relative requests such as “last month” are sufficient when they resolve unambiguously in the user's timezone.
+4. Before calculating, ask the user for any other missing fact that can materially change the result and cannot be established from source evidence. Typical blockers include the timezone, accounts/spaces in scope, ambiguous store matches, unresolved cancellations/refunds, unclear cumulative-versus-incremental extensions, and reservation-specific fee terms. Do not silently guess.
+5. Apply documented defaults only when the required classification is known, and disclose each estimate. If a reliable partial total can be produced while some items remain unresolved, separate confirmed and unresolved amounts and ask focused questions that identify the affected reservation IDs.
 
 ## Scope and period
 
-- Confirm the target month, timezone, and accounts/spaces in scope. If the user says “last month,” use the previous completed calendar month in the user’s timezone.
+- Confirm the target year-month before searching, plus the timezone and accounts/spaces in scope. If the user says “last month,” use the previous completed calendar month in the user’s timezone.
 - Select reservations by their usage date. An August report includes usage starting in August regardless of when the booking email arrived. Do not use notification-received month as the default accounting basis; produce it only when explicitly requested.
 - Search reservation notifications from 12 months before the target month’s first day through the latest available reconciliation date. This lookback captures bookings made far in advance. Then follow every candidate reservation forward for later changes, extensions, cancellations, refunds, or settlement updates.
 - If the requested reporting period spans multiple months, use the requested usage-date range and keep the one-year pre-period notification lookback.
@@ -57,6 +58,10 @@ Read [platform-rules.md](references/platform-rules.md) when identifying platform
 - Aggregate both by platform and by normalized space/store. Preserve the original platform listing name in detail so the mapping remains auditable.
 
 ## Kashikashi CSV/PDF
+
+If a connected calendar is available and a Kashikashi statement has not yet been supplied, use the calendar as a gross-revenue fallback. First build the normalized store map from Instabase, SpaceMarket, or other evidence, then list visible calendars and select only strong store-name matches. Ask the user about uncertain matches. Search those calendars only within the requested usage month for Kashikashi events, read full event details, and follow the duplicate-block rules in [platform-rules.md](references/platform-rules.md).
+
+Calendar-derived Kashikashi data may establish the store, usage start/end, and tax-inclusive gross total. Record the calendar event ID as a source locator, never as a platform reservation ID. Calendar data without a real reservation ID, booking fee, payout, and cancellation history is provisional: report gross revenue separately and ask for the relevant Kashikashi CSV or PDF before reporting exact fee-deducted proceeds. If a later statement disagrees, the statement wins and the variance must be investigated.
 
 Run `scripts/parse_kashikashi.py SOURCE --output normalized.json` for a Kashikashi settlement CSV or PDF. Review warnings and reconcile the parsed sales, booking fees, transfer fees, and scheduled payout to the source totals before combining them with email-derived bookings.
 

@@ -46,16 +46,7 @@ Do not infer a discounted or daily-plan rate from the space name alone. Tie it t
 - Prefer the statement’s per-booking `売上`, `手数料`, and `支払金額` rather than recomputing them.
 - Record `振込手数料` separately as a common fee. Verify: sum of booking payouts minus transfer fee equals scheduled payout.
 - PDF and CSV statements can be normalized with `scripts/parse_kashikashi.py`.
-
-### Google Calendar fallback
-
-- Use this only when the target year-month is known and the calendar connector passes a read-only connection check.
-- Match calendars to already normalized stores by exact normalized names or strong distinctive tokens. Do not search unrelated personal calendars, and ask the user before using an uncertain match.
-- Bound the search to the target usage month in the user's timezone and query for Kashikashi markers. Read full events because list/search results may omit descriptions.
-- One booking can create both a detailed reservation event and a separate preparation/cleanup blocking event. Count only the event carrying the booking details and final tax-inclusive `合計`; treat a neighboring block without details as a duplicate only after verifying the store and time relationship.
-- Extract the final `合計` amount rather than summing individual options. Preserve the event ID, calendar name, and usage timestamps as the audit locator.
-- Do not invent a reservation ID when the calendar omits it. Do not infer booking fees, payout, refunds, or cancellation completeness from the calendar alone.
-- Label calendar-derived gross as provisional. Request the corresponding CSV or PDF to obtain reservation IDs, actual fees, transfer fees, and scheduled payout. Reconcile calendar booking count and gross total to the statement when it arrives.
+- Do not calculate Kashikashi from scheduling data or other provisional sources. Require an uploaded Kashikashi CSV or PDF for both revenue and fee calculations.
 
 ## Cross-platform safeguards
 

@@ -1,6 +1,6 @@
 ---
 name: rental-space-revenue
-description: Aggregate monthly rental-space revenue on a usage-date basis from connected email/calendar data and uploaded CSV/PDF statements. Use for platform/space totals, reservation-ID reconciliation, changes, extensions, cancellations, duplicate notifications, fees, and net proceeds across services such as Instabase, SpaceMarket, Yoyappin, and Kashikashi.
+description: Aggregate monthly rental-space revenue on a usage-date basis from connected email and uploaded CSV/PDF statements. Use for platform/space totals, reservation-ID reconciliation, changes, extensions, cancellations, duplicate notifications, fees, and net proceeds across services such as Instabase, SpaceMarket, Yoyappin, and Kashikashi.
 ---
 
 # Rental-space revenue reconciliation
@@ -19,7 +19,7 @@ Use the mailbox, file-reading, spreadsheet, and code-execution tools available i
 
 ## Scope and period
 
-- Confirm the target year-month before searching, plus the timezone and accounts/spaces in scope. If the user says “last month,” use the previous completed calendar month in the user’s timezone.
+- Confirm the target year-month before searching, plus the timezone and accounts/spaces in scope. If the user says “last month,” use the immediately preceding completed month in the user’s timezone.
 - Select reservations by their usage date. An August report includes usage starting in August regardless of when the booking email arrived. Do not use notification-received month as the default accounting basis; produce it only when explicitly requested.
 - Search reservation notifications from 12 months before the target month’s first day through the latest available reconciliation date. This lookback captures bookings made far in advance. Then follow every candidate reservation forward for later changes, extensions, cancellations, refunds, or settlement updates.
 - If the requested reporting period spans multiple months, use the requested usage-date range and keep the one-year pre-period notification lookback.
@@ -59,13 +59,9 @@ Read [platform-rules.md](references/platform-rules.md) when identifying platform
 
 ## Kashikashi CSV/PDF
 
-If a connected calendar is available and a Kashikashi statement has not yet been supplied, use the calendar as a gross-revenue fallback. First build the normalized store map from Instabase, SpaceMarket, or other evidence, then list visible calendars and select only strong store-name matches. Ask the user about uncertain matches. Search those calendars only within the requested usage month for Kashikashi events, read full event details, and follow the duplicate-block rules in [platform-rules.md](references/platform-rules.md).
-
-Calendar-derived Kashikashi data may establish the store, usage start/end, and tax-inclusive gross total. Record the calendar event ID as a source locator, never as a platform reservation ID. Calendar data without a real reservation ID, booking fee, payout, and cancellation history is provisional: report gross revenue separately and ask for the relevant Kashikashi CSV or PDF before reporting exact fee-deducted proceeds. If a later statement disagrees, the statement wins and the variance must be investigated.
-
 Run `scripts/parse_kashikashi.py SOURCE --output normalized.json` for a Kashikashi settlement CSV or PDF. Review warnings and reconcile the parsed sales, booking fees, transfer fees, and scheduled payout to the source totals before combining them with email-derived bookings.
 
-If no Kashikashi statement was supplied, do not block the Instabase, SpaceMarket, or Yoyappin reconciliation. Clearly label the result as excluding Kashikashi and, during the work or in the final handoff, tell the user that they can upload the relevant Kashikashi CSV or PDF to add it. Never report an all-platform grand total as complete while Kashikashi is expected but missing.
+Calculate Kashikashi only from an uploaded Kashikashi CSV or PDF. Do not use scheduling tools or other provisional sources as a substitute. If no Kashikashi statement was supplied, do not block the Instabase, SpaceMarket, or Yoyappin reconciliation, but clearly label the result as excluding Kashikashi and tell the user to upload the relevant Kashikashi CSV or PDF. Never estimate Kashikashi revenue or fees, and never report an all-platform grand total as complete while Kashikashi is expected but missing.
 
 ## Deliverable and checks
 

@@ -17,13 +17,20 @@ Use the mailbox, file-reading, spreadsheet, and code-execution tools available i
 4. Before calculating, ask the user for any other missing fact that can materially change the result and cannot be established from source evidence. Typical blockers include the timezone, accounts/spaces in scope, ambiguous store matches, unresolved cancellations/refunds, unclear cumulative-versus-incremental extensions, and reservation-specific fee terms. Do not silently guess.
 5. Apply documented defaults only when the required classification is known, and disclose each estimate. If a reliable partial total can be produced while some items remain unresolved, separate confirmed and unresolved amounts and ask focused questions that identify the affected reservation IDs.
 
+## Mailbox safety: strictly read-only
+
+- Use only non-mutating mailbox operations needed to verify the account, search messages, read messages or threads, and read attachments.
+- Never send or forward mail; create, edit, or send drafts; archive, move, trash, or delete messages; apply, remove, or create labels; mark messages read or unread; star messages; modify threads; or change mailbox settings.
+- Do not use a mailbox write operation as a workaround, even if it appears harmless or convenient. This skill has no authority to modify email under any circumstance.
+- If the available connector cannot complete the task without a write action, stop and tell the user. Never claim a read-only workflow was followed after invoking a mutating action.
+
 ## Scope and period
 
 - Confirm the target year-month before searching, plus the timezone and accounts/spaces in scope. If the user says “last month,” use the immediately preceding completed month in the user’s timezone.
 - Select reservations by their usage date. An August report includes usage starting in August regardless of when the booking email arrived. Do not use notification-received month as the default accounting basis; produce it only when explicitly requested.
 - Search reservation notifications from 12 months before the target month’s first day through the latest available reconciliation date. This lookback captures bookings made far in advance. Then follow every candidate reservation forward for later changes, extensions, cancellations, refunds, or settlement updates.
 - If the requested reporting period spans multiple months, use the requested usage-date range and keep the one-year pre-period notification lookback.
-- Read connected mail without modifying it. Uploaded CSV/PDF statements are source documents, not templates to edit.
+- Read connected mail strictly through the non-mutating operations defined above. Uploaded CSV/PDF statements are source documents, not templates to edit.
 
 ## Extraction and reconciliation
 
